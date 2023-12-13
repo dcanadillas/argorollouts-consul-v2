@@ -1,4 +1,11 @@
-# Consul 1.17 RC1 Tests
+# Consul test with Argo Rollouts and Catalog v2
+
+## Requirements
+
+* Kubernetes cluster deployed (use Minikube, Kind or MicroK8s for quick deployment)
+* kubectl CLI installed
+* Helm installed
+* Linux or MacOS terminal
 
 ## Installing Environment
 
@@ -7,7 +14,9 @@ You can install install the environment using the provided dummy script:
 ./install.sh
 ```
 
-For `demoapp/dcanadillas`  there are two services that points to the same pods that will be part of the canary and stable versions:
+> NOTE: Change the variable `CONSUL_LICENSE` definition in the script `install.sh` to point your license file to use Consul Enterprise. If you want to use Consul Community you need to change the variable at the beginning of the script with `CONSUL_VERSION=1.17.0`
+
+For the demo application manifests at `demoapp/dcanadillas`  there are two services that points to the same pods that will be part of the canary and stable versions:
 * service `canary-front` will be for canary deployments
 * service `frontend` will be for stable ones
 
