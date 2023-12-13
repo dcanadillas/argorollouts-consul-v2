@@ -1,0 +1,61 @@
+# Service to expose service-b-v1
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  # type: LoadBalancer
+  ports:
+  - name: http
+    protocol: TCP
+    port: 9090
+    targetPort: 8080
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backend
+---
+# service-b-v1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+      annotations:
+        # consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/mesh-inject: "true"
+        consul.hashicorp.com/transparent-proxy: "true"
+#       "consul.hashicorp.com/connect-service-upstreams": "service-c:9091"
+        # "consul.hashicorp.com/connect-service-upstreams": "service-c-v1.default.tenant-2:9091"
+         #For the upstream line, this points to the #"<servicename>.<consul-namespace>.<partitionname>:<port#>" of the upstream service.
+         #If its in the same partition and namespace, it can be omitted, ex:
+#        "consul.hashicorp.com/connect-service-upstreams": "service-c:9091"
+    spec:
+      serviceAccountName: backend
+      containers:
+      - name: backend
+        image: hcdcanadillas/pydemo-back:v1.4
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 8080
+        env:
+          # %{ for k,v in entrypoint.env }
+          # - name: ${k}
+          #   value: "${v}"
+          # %{ endfor }
+          - name: PORT
+            value: "8080"

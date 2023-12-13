@@ -1,0 +1,25 @@
+global:
+  enabled: true
+  name: consul
+  image: hashicorp/consul:1.17.0
+  imageK8S: hashicorp/consul-k8s-control-plane:1.3.0
+  imageConsulDataplane: hashicorp/consul-dataplane:1.3.0
+  datacenter: dc1
+  tls:
+    enabled: true
+  acls:
+    bootstrapToken:
+      secretKey: token
+      secretName: consul-bootstrap-token
+    manageSystemACLs: true
+  enterpriseLicense:
+    secretKey: license
+    secretName: consul-ent-license
+  experiments: ["resource-apis"]
+server:
+  enabled: true
+  replicas: 1
+connectInject:
+  enabled: true
+ui:
+  enabled: false

@@ -1,0 +1,14 @@
+apiVersion: auth.consul.hashicorp.com/v2beta1
+kind: TrafficPermissions
+metadata:
+  name: frontend-to-backend-allow
+spec:
+  destination:
+    identityName: backend
+  action: ACTION_ALLOW
+  permissions:
+    - sources:
+        - identityName: frontend # allow all sources
+        - identityName: nginx
+    #   # destinationRules:
+    #   #   - portNames: ["http"] # restrict traffic to api

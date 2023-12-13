@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  selector:
+    app: proxy
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proxy
+  template:
+    metadata:
+      labels:
+        app: proxy
+      annotations:
+        consul.hashicorp.com/mesh-inject: "true"
+        consul.hashicorp.com/transparent-proxy: "true"
+    spec:
+      serviceAccountName: nginx
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 80
+
