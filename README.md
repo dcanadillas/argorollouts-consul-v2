@@ -14,7 +14,7 @@ You can install install the environment using the provided dummy script:
 ./install.sh
 ```
 
-> NOTE: Change the variable `CONSUL_LICENSE` definition in the script `install.sh` to point your license file to use Consul Enterprise. If you want to use Consul Community you need to change the variable at the beginning of the script with `CONSUL_VERSION=1.17.0`
+> NOTE: Change the variable `LICENSE_FILE` definition in the script `install.sh` to point your license file to use Consul Enterprise. If you want to use Consul Community you need to change the variable at the beginning of the script with `CONSUL_VERSION=1.17.0`
 
 For the demo application manifests at `demoapp/dcanadillas`  there are two services that points to the same pods that will be part of the canary and stable versions:
 * service `canary-front` will be for canary deployments
