@@ -3,7 +3,7 @@
 
 CONSUL_K8S_VERSION="1.3.0"
 CONSUL_VALUES="./consul.yaml"
-CONSUL_VERSION="1.17.0-ent"
+CONSUL_VERSION="1.17.0"
 CHART_REPO="hashicorp/consul"
 LICENSE_FILE="/Users/david/SynologyDrive/HashiCorp_Personal/Licenses/consul-202410.hclic"
 CONSUL_LICENSE="$(cat $LICENSE_FILE)"
@@ -33,13 +33,15 @@ install_consul () {
   local chart_version=$2
   if echo $3 | grep -q ".*-ent$";then
     local consul_version="$3-ent"
+    local docker_path="hashicorp/consul-enterprise"
   else
     local consul_version="$3"
+    local docker_path="hashicorp/consul"
   fi
 
   # helm upgrade -i consul -n consul -f $values --version $chart_version $CHART_REPO --debug --wait
   helm upgrade -i consul -n consul -f $values \
-  --set "image=hashicorp/consul-enterprise:$consul_version" \
+  --set "image=$docker_path:$consul_version" \
   --set "imageK8s=hashicorp/consul-k8s-control-plane:$chart_version" \
   --set "imageConsulDataplane=hashicorp/consul-k8s-control-plane:$chart_version" \
   --version $chart_version \
@@ -96,7 +98,7 @@ echo -e "\n\n"
 
 
 # Install Consul
-echo -e "${GRN}Installing Consul 1.17 with API Gateway... ${NC}"
+echo -e "${GRN}Installing Consul 1.17... ${NC}"
 install_consul $CONSUL_VALUES $CONSUL_K8S_VERSION $CONSUL_VERSION
 echo -e "\n\n"
 
